@@ -1,0 +1,19 @@
+{
+  "name": "ecomm",
+  "version": "1.0.0",
+  "description": "ecomm app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "vijay.j.shekhawat@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jade": "^1.11.0",
+    "mysql2": "^3.0.0-rc.1",
+    "sequelize": "^6.25.4"
+  }
+}

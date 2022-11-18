@@ -3,50 +3,44 @@ const Products = require("../model/product");
 const { Sequelize } = require("sequelize");
 const e = require("express");
 
-async function createTable() {
-  await sequelizeInstance.sync({ force: true });
-  console.log("Products table created successfully!");
-  insertProducts();
-}
-
-async function insertProducts() {
+let insertProducts = async (req, res, next) => {
   await Products.bulkCreate([
     {
-      name: "Samsung Galaxy Note",
+      name: "Hrx",
       categoryId: 1,
       price: 18000,
     },
     {
       name: "Iphone 13",
-      categoryId: 1,
+      categoryId: 2,
       price: 60000,
     },
     {
       name: "Sony bravia",
-      categoryId: 2,
+      categoryId: 3,
       price: 40000,
     },
     {
       name: "Boat Rugged",
-      categoryId: 5,
+      categoryId: 4,
       price: 4000,
     },
     {
       name: "JBL Storm",
-      categoryId: 5,
+      categoryId: 4,
       price: 9000,
     },
     {
       name: "Vu 5",
-      categoryId: 2,
+      categoryId: 3,
       price: 32000,
     },
   ]);
 
-  console.log("Added data successfully");
-
-  getAllProducts();
-}
+  res.status(201).json({
+    message: "Products added",
+  });
+};
 
 let getAllProducts = async (req, res, next) => {
   let categoryId = req.query.categoryId;
@@ -116,6 +110,4 @@ let getProductById = async (req, res, next) => {
   res.end();
 };
 
-//createTable();
-
-module.exports = { getAllProducts, getProductById };
+module.exports = { getAllProducts, getProductById, insertProducts };

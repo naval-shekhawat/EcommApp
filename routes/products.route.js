@@ -3,7 +3,8 @@ let productRouter = express.Router();
 let productController = require("./../controller/product.controller");
 
 productRouter.get("/", productController.getAllProducts);
-
 productRouter.get("/:productId", productController.getProductById);
+
+productRouter.post("/", productController.insertProducts);
 
 module.exports = productRouter;

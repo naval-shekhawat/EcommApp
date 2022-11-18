@@ -1,4 +1,3 @@
-// const Categories = require("../model/category");
 const Categories = require("./../model/category");
 
 const validateReqForCategoryName = (req, res, next) => {

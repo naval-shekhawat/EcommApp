@@ -13,10 +13,6 @@ let Products = sequelizeInstance.define(
       type: sequelize.DataTypes.STRING,
       allowNull: false,
     },
-    categoryId: {
-      type: sequelize.DataTypes.INTEGER,
-      allowNull: false,
-    },
     price: {
       type: sequelize.DataTypes.BIGINT,
       allowNull: false,

@@ -32,6 +32,4 @@ categoryRouter.delete(
   categoryController.deleteCategoryById
 );
 
-// base route is /categories
-
 module.exports = categoryRouter;

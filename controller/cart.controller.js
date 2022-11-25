@@ -3,7 +3,7 @@ const Product = db.product;
 const Cart = db.cart;
 
 let createCart = async (req, res, next) => {
-  const cart = { cost: 0 };
+  let cart = req.body;
   try {
     await Cart.create(cart);
     res.status(200).json({
@@ -29,11 +29,11 @@ let updateCart = async (req, res, next) => {
     if (productsToAdd) {
       await cartToUpdate.setProducts(productsToAdd);
       console.log("Product added");
-      let cost = 0;
+      let totalCost = 0;
       let productsSelected = [];
       let products = await cartToUpdate.getProducts();
       for (i = 0; i < products.length; i++) {
-        cost = cost + products[i].price;
+        totalCost = totalCost + products[i].price;
         productsSelected.push({
           id: products[i].id,
           name: products[i].name,
@@ -44,7 +44,7 @@ let updateCart = async (req, res, next) => {
       res.status(200).json({
         id: cartToUpdate.id,
         productsSelected,
-        cost,
+        totalCost,
       });
     }
   }
@@ -52,11 +52,11 @@ let updateCart = async (req, res, next) => {
 
 let getCart = async (req, res, next) => {
   let cart = await Cart.findByPk(req.params.cartId);
-  let cost = 0;
+  let totalCost = 0;
   let productsSelected = [];
   let products = await cart.getProducts();
   for (i = 0; i < products.length; i++) {
-    cost = cost + products[i].cost;
+    totalCost = cost + products[i].cost;
     productsSelected.push({
       id: products[i].id,
       name: products[i].name,
@@ -67,7 +67,7 @@ let getCart = async (req, res, next) => {
   res.status(200).json({
     id: cart.id,
     productsSelected,
-    cost,
+    totalCost,
   });
 };
 

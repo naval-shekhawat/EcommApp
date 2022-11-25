@@ -1,5 +1,4 @@
 const sequelize = require("sequelize");
-
 let db = {};
 
 db.sequelize = sequelize;

@@ -1,5 +1,5 @@
 const db = require("./../model/index");
-const Roles = db.Roles;
+const Roles = db.Roles; // constant and not the roles model
 const User = db.user;
 
 let checkDuplicateUserName = async (req, res, next) => {
@@ -19,8 +19,10 @@ let checkDuplicateUserName = async (req, res, next) => {
   next();
 };
 
-checkRolesExisted = (req, res, next) => {
+let checkRolesExisted = (req, res, next) => {
   if (req.body.roles) {
+    // supernova
+    // Roles = ['admin', 'user']
     for (let i = 0; i < req.body.roles.length; i++) {
       if (!Roles.includes(req.body.roles[i])) {
         res.status(400).send({

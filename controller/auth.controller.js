@@ -1,8 +1,8 @@
-const db = require("./../model/index");
 const config = require("./../config/auth.config");
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
 const { Sequelize } = require("sequelize");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const db = require("./../model/index");
 const User = db.user;
 const Roles = db.roles;
 
@@ -26,15 +26,19 @@ let signup = async (req, res) => {
     res.status(200).json({
       message: "User registered successfully",
     });
+  } else {
+    await user.setRoles([1]);
+    res.status(200).json({
+      message: "Registered with user role",
+    });
   }
 };
 
 let signin = async (req, res) => {
-  let username = req.body.username;
   let password = req.body.password;
   let userName = await User.findOne({
     where: {
-      username: username,
+      username: req.body.username,
     },
   });
 
@@ -45,17 +49,20 @@ let signin = async (req, res) => {
     return;
   }
 
-  let isValidPassword = bcrypt.compareSync(password, userName.password);
+  let isValidPassword = bcrypt.compareSync(
+    req.body.password,
+    userName.password
+  );
 
   if (!isValidPassword) {
-    res.status(404).json({
-      message: "Password is invalid",
+    res.status(401).json({
+      message: "Password is incorrect",
     });
     return;
   }
 
   var token = jwt.sign({ id: userName.id }, config.secret, {
-    expiresIn: 86400,
+    expiresIn: 86400, // 60 * 60 * 24
   });
 
   let authorities = [];

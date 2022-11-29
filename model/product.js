@@ -1,26 +1,25 @@
-let sequelizeInstance = require("./../config/db.config");
-const sequelize = require("sequelize");
+module.exports = (sequelize, sequelizeInstance) => {
+  let Products = sequelizeInstance.define(
+    "products",
+    {
+      id: {
+        type: sequelize.DataTypes.BIGINT,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      name: {
+        type: sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      price: {
+        type: sequelize.DataTypes.BIGINT,
+        allowNull: false,
+      },
+    },
+    {
+      timestamps: false,
+    }
+  );
 
-let Products = sequelizeInstance.define(
-  "products",
-  {
-    id: {
-      type: sequelize.DataTypes.BIGINT,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    name: {
-      type: sequelize.DataTypes.STRING,
-      allowNull: false,
-    },
-    price: {
-      type: sequelize.DataTypes.BIGINT,
-      allowNull: false,
-    },
-  },
-  {
-    timestamps: false,
-  }
-);
-
-module.exports = Products;
+  return Products;
+};

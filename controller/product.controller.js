@@ -1,10 +1,7 @@
-let sequelizeInstance = require("./../config/db.config");
-const Products = require("../model/product");
-const { Sequelize } = require("sequelize");
-const e = require("express");
+const db = require("../model");
 
 let insertProducts = async (req, res, next) => {
-  await Products.bulkCreate([
+  await db.product.bulkCreate([
     {
       name: "Hrx",
       categoryId: 1,
@@ -42,6 +39,18 @@ let insertProducts = async (req, res, next) => {
   });
 };
 
+let createProduct = async (req, res, next) => {
+  let productToAdd = req.body;
+  try {
+    await db.product.create(productToAdd);
+    res.status(201).json(productToAdd);
+  } catch (err) {
+    res.status(500).json({
+      message: "Some internal error occured",
+    });
+  }
+};
+
 let getAllProducts = async (req, res, next) => {
   let categoryId = req.query.categoryId;
   let minPrice = req.query.minPrice;
@@ -49,19 +58,19 @@ let getAllProducts = async (req, res, next) => {
   let products = [];
 
   if (Object.keys(req.query).length == 0) {
-    products = await Products.findAll();
+    products = await db.product.findAll();
   } else {
     if (categoryId && !(minPrice || maxPrice)) {
       products = await filterByCategory(categoryId);
     } else if (!categoryId && minPrice && maxPrice) {
       products = await filterByPriceRange(minPrice, maxPrice);
     } else {
-      products = await Products.findAll({
+      products = await db.product.findAll({
         where: {
           categoryId: categoryId,
           price: {
-            [Sequelize.Op.gte]: minPrice,
-            [Sequelize.Op.lte]: maxPrice,
+            [db.sequelize.Op.gte]: minPrice,
+            [db.sequelize.Op.lte]: maxPrice,
           },
         },
       });
@@ -73,7 +82,7 @@ let getAllProducts = async (req, res, next) => {
 };
 
 let filterByCategory = async (categoryId) => {
-  let filteredProducts = await Products.findAll({
+  let filteredProducts = await db.product.findAll({
     where: {
       categoryId: categoryId,
     },
@@ -83,11 +92,11 @@ let filterByCategory = async (categoryId) => {
 };
 
 let filterByPriceRange = async (minPrice, maxPrice) => {
-  let filteredProducts = await Products.findAll({
+  let filteredProducts = await db.product.findAll({
     where: {
       price: {
-        [Sequelize.Op.gte]: minPrice,
-        [Sequelize.Op.lte]: maxPrice,
+        [db.sequelize.Op.gte]: minPrice,
+        [db.sequelize.Op.lte]: maxPrice,
       },
     },
   });
@@ -99,15 +108,19 @@ let getProductById = async (req, res, next) => {
   let id = req.params.productId;
   if (!id) {
     res.status(400).send("ID not passed");
+    res.end();
   }
-  let products = await Products.findAll({
+  let products = await db.product.findOne({
     where: {
       id: id,
     },
   });
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.write(JSON.stringify(products));
-  res.end();
+  res.status(200).json(products);
 };
 
-module.exports = { getAllProducts, getProductById, insertProducts };
+module.exports = {
+  createProduct,
+  getAllProducts,
+  getProductById,
+  insertProducts,
+};

@@ -1,22 +1,21 @@
-let sequelizeInstance = require("./../config/db.config");
-const sequelize = require("sequelize");
-
-let Categories = sequelizeInstance.define(
-  "categories",
-  {
-    id: {
-      type: sequelize.DataTypes.BIGINT,
-      primaryKey: true,
-      autoIncrement: true,
+module.exports = (sequelize, sequelizeInstance) => {
+  let Categories = sequelizeInstance.define(
+    "categories",
+    {
+      id: {
+        type: sequelize.DataTypes.BIGINT,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      name: {
+        type: sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
     },
-    name: {
-      type: sequelize.DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    timestamps: false,
-  }
-);
+    {
+      timestamps: false,
+    }
+  );
 
-module.exports = Categories;
+  return Categories;
+};

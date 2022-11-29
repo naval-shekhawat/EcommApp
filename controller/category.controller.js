@@ -1,28 +1,32 @@
-let Categories = require("./../model/category");
+const db = require("./../model");
 
 let getAllCategories = async (req, res, next) => {
-  let categories = await Categories.findAll();
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.write(JSON.stringify(categories));
-  res.end();
+  try {
+    let categories = await db.category.findAll();
+    res.status(200).json(categories);
+  } catch (err) {
+    res.status(400).json({
+      message: "Some internal error occured",
+    });
+  }
 };
 
 let getCategoryById = async (req, res, next) => {
   let id = req.params.categoryId;
-  let categories = await Categories.findAll({
+  let categories = await db.category.findOne({
     where: {
       categoryId: id,
     },
   });
 
-  req.status(200).json(categories);
+  res.status(200).json(categories);
   res.end();
 };
 
 let addNewCategory = async (req, res, next) => {
   try {
     let categoryToAdd = req.body;
-    await Categories.create(categoryToAdd);
+    await db.category.create(categoryToAdd);
     res.status(201).send("New category added");
     res.end();
   } catch (err) {
@@ -32,13 +36,13 @@ let addNewCategory = async (req, res, next) => {
 
 let deleteCategoryById = async (req, res, next) => {
   let id = req.params.categoryId;
-  let category = await Categories.findByPk(id);
+  let category = await db.category.findByPk(id);
   try {
     if (!category) {
       throw new Error("Category not found");
     }
 
-    await Categories.destroy({
+    await db.category.destroy({
       where: {
         categoryId: id,
       },
@@ -58,13 +62,13 @@ let updateCategoryById = async (req, res, next) => {
     price: req.body.price,
   };
 
-  await Categories.update(categoryToUpdate, {
+  await db.category.update(categoryToUpdate, {
     where: {
       categoryId: id,
     },
   });
 
-  let updateCategory = await Categories.findByPk(id);
+  let updateCategory = await db.category.findByPk(id);
   res.status(200).send(updateCategory);
 };
 
